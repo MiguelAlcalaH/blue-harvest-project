@@ -1,0 +1,117 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .title {
+    text-align: center;
+    color: #333;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+  }
+  
+  .form-group select,
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .customer-info {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  .customer-info h2 {
+    margin-bottom: 10px;
+    color: #555;
+  }
+  
+  .account-form {
+    margin-top: 20px;
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  ul li {
+    margin: 4px 0;
+  }
+  /* Estilos generales para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilos para las cabeceras */
+  th {
+    padding: 12px 15px;
+    background-color: #4CAF50;
+    color: white;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  /* Estilos para las filas */
+  td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Estilo para filas alternas */
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  /* Estilos al pasar el ratón por encima de las filas */
+  tbody tr:hover {
+    background-color: #e0f7e0;
+  }
+  
+  /* Estilo para el borde inferior de la tabla */
+  table {
+    border-bottom: 2px solid #ddd;
+  }
+  
+  input{
+    max-width: 570px;
+    margin-left: 1em;
+  }
