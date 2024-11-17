@@ -53,6 +53,7 @@ class AccountServiceImplTest {
     void openAccount_WithZeroInitialCredit_ShouldNotCreateTransaction() {
         // Arrange
         Account account = new Account();
+        account.setBalance(BigDecimal.ZERO);
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         // Act
