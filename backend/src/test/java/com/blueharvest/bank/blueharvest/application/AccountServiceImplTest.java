@@ -3,8 +3,10 @@ package com.blueharvest.bank.blueharvest.application;
 
 import com.blueharvest.bank.blueharvest.application.impl.AccountServiceImpl;
 import com.blueharvest.bank.blueharvest.domain.Account;
+import com.blueharvest.bank.blueharvest.domain.Customer;
 import com.blueharvest.bank.blueharvest.domain.Transaction;
 import com.blueharvest.bank.blueharvest.infrastructure.AccountRepository;
+import com.blueharvest.bank.blueharvest.infrastructure.CustomerRepository;
 import com.blueharvest.bank.blueharvest.infrastructure.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,9 @@ class AccountServiceImplTest {
 
     @Mock
     private TransactionRepository transactionRepository;
+    
+    @Mock
+    private CustomerRepository customerRepository;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -39,6 +44,7 @@ class AccountServiceImplTest {
     void openAccount_WithInitialCredit_ShouldCreateTransaction() {
         // Arrange
         Account account = new Account();
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         // Act
@@ -54,6 +60,7 @@ class AccountServiceImplTest {
         // Arrange
         Account account = new Account();
         account.setBalance(BigDecimal.ZERO);
+        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(new Customer()));
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         // Act

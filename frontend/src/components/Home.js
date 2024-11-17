@@ -3,12 +3,14 @@ import "./Home.css";
 
 const Home = () => {
   const [customerList, setCustomerList] = useState([]);
-  const [selectecCustomer, setSelectecCustomer] = useState();
-  const [selectedAccount, setSelectedAccount] = useState("");
-  const [initialCredit, setInitialCredit] = useState();
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [initialCredit, setInitialCredit] = useState(0);
+
+  const backendBaseUrl = "http://localhost:8082/api/v1";
 
   const updateCustomerAccounts = (newAccount) => {
-    setSelectecCustomer((prev) => ({
+    setSelectedCustomer((prev) => ({
       ...prev,
       accounts: [...prev.accounts, newAccount],
     }));
@@ -62,48 +64,56 @@ const Home = () => {
 
   useEffect(() => {
     // Fetch para obtener la lista de clientes
-    // fetch('/v1/customers')
-    //   .then((response) => response.json())
-    //   .then((data) => setCustomerList(data))
-    //   .catch((error) => console.error("Error fetching customers:", error));
-    setCustomerList(mockCustomerList);
+    fetch(`${backendBaseUrl}/customers`)
+       .then((response) => response.json())
+       .then((data) => setCustomerList(data))
+       .catch((error) => console.error("Error fetching customers:", error));
+//    setCustomerList(mockCustomerList);
   }, []);
 
   useEffect(() => {
-    if (selectecCustomer?.id) {
+    if (selectedCustomer?.id) {
       // Fetch para obtener los detalles del cliente seleccionado
-      // fetch(`/v1/customer/${selectecCustomer.id}`)
-      //   .then((response) => response.json())
-      //   .then((data) => setSelectecCustomer(data))
-      //   .catch((error) => console.error("Error fetching customer details:", error));
-      if (selectecCustomer.id === "1") {
-        setSelectecCustomer(mockCustomerDetails);
-      }
+      fetch(`${backendBaseUrl}/customers/${selectedCustomer.id}`)
+         .then((response) => response.json())
+         .then((data) => setSelectedCustomer(data))
+         .catch((error) => console.error("Error fetching customer details:", error));
+      /*if (selectedCustomer.id === "1") {
+        setSelectedCustomer(mockCustomerDetails);
+      }*/
     }
-  }, [selectecCustomer?.id]);
+  }, [selectedCustomer?.id]);
 
   const handleCustomerChange = (e) => {
     //fetch
     const currentCustomer = customerList.find(
       (customer) => customer.name === e.target.value
     );
-    setSelectecCustomer(currentCustomer);
+    setSelectedCustomer(currentCustomer);
     setSelectedAccount(null);
-    setInitialCredit(null);
+    setInitialCredit(0);
   };
 
   const handleAccountChange = (e) => {
-    const currentAccount = selectecCustomer?.accounts?.find(
-      (account) => account.id === e.target.value
+    console.log("Account change:", e.target.value);
+    console.log("Selected customer:", selectedCustomer);
+
+    fetch(`${backendBaseUrl}/accounts/${e.target.value}`)
+    .then((response) => response.json())
+    .then((data) => setSelectedAccount(data))
+    .catch((error) => console.error("Error fetching customer details:", error));
+
+   /* const currentAccount = selectedCustomer?.accounts?.find(
+      (account) => account.accountId === e.target.value
     );
-    setSelectedAccount(currentAccount);
+    setSelectedAccount(currentAccount);*/
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const data = {
-      customerId: selectecCustomer.id,
+      customerId: selectedCustomer.id,
       initialCredit: Number(initialCredit),
     };
 
@@ -116,24 +126,24 @@ const Home = () => {
       ],
     };
     // Simulación de la creación de cuenta (fetch real)
-    // fetch('http://localhost:8080/v1/account', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(data),
-    // })
-    //   .then((response) => response.json())
-    //   .then((newAccount) => {
-    //     console.log("Account created successfully:", newAccount);
-    //     updateCustomerAccounts(newAccount);
-    //   })
-    //   .catch((error) => console.error("Error creating account:", error));
+    fetch(`${backendBaseUrl}/accounts`, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify(data),
+     })
+       .then((response) => response.json())
+       .then((newAccount) => {
+         console.log("Account created successfully:", newAccount);
+         updateCustomerAccounts(newAccount);
+       })
+       .catch((error) => console.error("Error creating account:", error));
 
-    setTimeout(() => {
+   /* setTimeout(() => {
       console.log("Account created successfully:", newAccount);
       updateCustomerAccounts(newAccount);
-    }, 1000);
+    }, 1000);*/
   };
 
   return (
@@ -148,34 +158,34 @@ const Home = () => {
           </option>
           {customerList.map((customer) => (
             <option key={customer.id} value={customer.name}>
-              {customer.name}
+              {customer.name} {customer.surname}
             </option>
           ))}
         </select>
       </div>
 
-      {selectecCustomer && (
+      {selectedCustomer && (
         <div className="customer-info">
           <h2>Customer Information</h2>
           <p>
-            <strong>Name:</strong> {selectecCustomer.name}
+            <strong>Name:</strong> {selectedCustomer.name}
           </p>
           <p>
-            <strong>Surname:</strong> {selectecCustomer.surName}
+            <strong>Surname:</strong> {selectedCustomer.surname}
           </p>
 
           <div className="form-group">
             <label>Select an account:</label>
             <select
               onChange={handleAccountChange}
-              value={selectedAccount?.id || ""}
+              defaultValue=""
             >
               <option value="" disabled>
                 Choose an option
               </option>
-              {selectecCustomer.accounts?.map((account) => (
-                <option key={account.id} value={account.id}>
-                  {account.id}
+              {selectedCustomer.accounts?.map((account) => (
+                <option key={account.accountId} value={account.accountId}>
+                  {account.accountId}
                 </option>
               ))}
             </select>
@@ -194,24 +204,16 @@ const Home = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Type</th>
                     <th>Amount</th>
-                    <th>Previous Balance</th>
-                    <th>New Balance</th>
                     <th>Date</th>
-                    <th>Subject</th>
                   </tr>
                 </thead>
                 <tbody style={{ textAlign: "center" }}>
                   {selectedAccount.transactions.map((transaction) => (
-                    <tr key={transaction.id}>
-                      <td>{transaction.id}</td>
-                      <td>{transaction.type}</td>
+                    <tr key={transaction.transactionId}>
+                      <td>{transaction.transactionId}</td>
                       <td>{transaction.amount}</td>
-                      <td>{transaction.prevBalance}</td>
-                      <td>{transaction.newBalance}</td>
-                      <td>{transaction.date}</td>
-                      <td>{transaction.subject}</td>
+                      <td>{transaction.timestamp}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -223,7 +225,7 @@ const Home = () => {
             <div className="form-group">
               <label>
                 Customer ID:
-                <input type="text" value={selectecCustomer.id ?? ""} disabled />
+                <input type="text" value={selectedCustomer.id ?? ""} disabled />
               </label>
             </div>
 
