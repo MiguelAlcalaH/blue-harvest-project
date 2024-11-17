@@ -24,19 +24,19 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account openAccount(Long customerId, BigDecimal initialCredit) {
         // Create a new account with zero balance initially
-        Account newAccount = Account.builder()
-                .balance(BigDecimal.ZERO)
-                .transactions(new ArrayList<>())
-                .build();
+        Account newAccount = new Account();
+                newAccount.setBalance(BigDecimal.ZERO);
+                newAccount.setTransactions(new ArrayList<>());
+   
         newAccount = accountRepository.save(newAccount);
 
         // If initialCredit > 0, create a new transaction and update account balance
         if (initialCredit.compareTo(BigDecimal.ZERO) > 0) {
-            Transaction transaction = Transaction.builder()
-                    .amount(initialCredit)
-                    .timestamp(LocalDateTime.now())
-                    .account(newAccount)
-                    .build();
+            Transaction transaction = new Transaction();
+            transaction.setAmount(initialCredit);
+            transaction.setTimestamp(LocalDateTime.now());
+            transaction.setAccount(newAccount);
+            
             transactionRepository.save(transaction);
 
             newAccount.setBalance(initialCredit);

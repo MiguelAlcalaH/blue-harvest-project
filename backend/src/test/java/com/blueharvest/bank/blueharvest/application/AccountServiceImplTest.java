@@ -38,7 +38,7 @@ class AccountServiceImplTest {
     @Test
     void openAccount_WithInitialCredit_ShouldCreateTransaction() {
         // Arrange
-        Account account = Account.builder().balance(BigDecimal.ZERO).build();
+        Account account = new Account();
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         // Act
@@ -52,7 +52,7 @@ class AccountServiceImplTest {
     @Test
     void openAccount_WithZeroInitialCredit_ShouldNotCreateTransaction() {
         // Arrange
-        Account account = Account.builder().balance(BigDecimal.ZERO).build();
+        Account account = new Account();
         when(accountRepository.save(any(Account.class))).thenReturn(account);
 
         // Act

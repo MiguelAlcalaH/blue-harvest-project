@@ -34,7 +34,7 @@ public class CustomerServiceImplTest {
     public void testGetCustomerDetails_Found() {
         // Arrange
         Long customerId = 1L;
-        Customer customer = Customer.builder().id(customerId).name("Pepe").surname("Hidalgo").build();
+        Customer customer = new Customer(customerId, "Pepe", "Hidalgo");
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
         // Act
